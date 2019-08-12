@@ -1,0 +1,254 @@
+<template>
+  <div id="main">
+      <el-row :gutter="20">
+        <template v-for="(title,index) in titles">
+          <el-col :span="8">
+            <div class="flh-style-a">
+              <Totaldata :marketcount="title.countdata" :detection="title.detection" :result="title.result| numFilter">
+                <template v-slot:title>
+                  {{title.value}}数据汇总
+                </template>
+                <template v-slot:date>
+                  <el-date-picker
+                    v-model="title.value"
+                    :type="title.type"
+                    :placeholder="title.placeholder"
+                    size="mini"
+                    class="flh-data-style"
+                    :format="title.format"
+                    :value-format="title.valueformat"
+                    @change="change(index)">
+                  </el-date-picker>
+                </template>
+              </Totaldata>
+            </div>
+          </el-col>
+        </template>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <div class="flh-style-a">
+            <el-row>
+              <el-col :span="24" style="padding-top: 20px">
+                <Titlename>快检样品种类总批次数</Titlename>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10">
+                <Kinddata :countCharts="countCharts"></Kinddata>
+              </el-col>
+              <el-col :span="14">
+                <Piecharts :countCharts="countCharts" :kindCharts="kindCharts"></Piecharts>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="flh-style-a">
+            <el-row>
+              <el-col :span="24" style="padding-top: 20px">
+                <Titlename>快检样品种类总合格率</Titlename>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10">
+                <Kinddata :marcounts="marcounts"></Kinddata>
+              </el-col>
+              <el-col :span="14">
+                <Shadowcharts :resultcounts="resultcounts"></Shadowcharts>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <div class="flh-style-b"></div>
+        </el-col>
+        <el-col :span="12">
+          <div class="flh-style-b"></div>
+        </el-col>
+      </el-row>
+  </div>
+
+</template>
+
+<script>
+    import Totaldata from "@/components/page/HomePgson/Totaldata";
+    import Piecharts from "@/components/page/HomePgson/Piecharts";
+    import Kinddata from "@/components/page/HomePgson/Kinddata";
+    import Titlename from "@/components/page/HomePgson/Titlename";
+    import Shadowcharts from  '@/components/page/HomePgson/Shadowcharts'
+    export default {
+      name: "homepage",
+      components: {Titlename, Kinddata, Piecharts, Totaldata,Shadowcharts},
+      data(){
+        return{
+          titles:[
+            {content:'',value:'',type:'year',placeholder:'选择年份',format:'yyyy年',valueformat:'yyyy',countdata:'',
+              detection:'',result:''},
+            {content:'',value:'',type:'month',placeholder:'选择月份',format:'yyyy年MM月',valueformat:'yyyy-MM',countdata:'',
+              detection:'',result:''},
+            {content:'',value:'',type:'date',placeholder:'选择日期',format:'yyyy年MM月dd日',valueformat:'yyyy-MM-dd',countdata:'',
+              detection:'',result:''}
+          ],
+          kindCharts:[],
+          countCharts:[],
+          marcounts:[],
+          resultcounts:[]
+        }
+      },
+      methods:{
+        marketcount(){
+          //循环加载市场总数、数据总数、合格率
+          for (let i=0;i<this.titles.length;i++) {
+            this.$axios.get('/Yearcouservlet$ajax.htm', {
+              params:{
+                date:this.titles[i].value,
+                area:'青羊区'
+              }
+            })
+              .then((res) => {
+                this.titles[i].countdata=res.data.marcount
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+            this.$axios.get('/Countservlet$ajax.htm', {
+              params:{
+                date:this.titles[i].value,
+                area:'青羊区'
+              }
+            })
+              .then((res) => {
+                this.titles[i].detection=res.data.marcount
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+            this.$axios.get('/Resultservlet$ajax.htm', {
+              params:{
+                date:this.titles[i].value,
+                area:'青羊区'
+              }
+            })
+              .then((res) => {
+                this.titles[i].result=res.data.data*100
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          }
+          //加载图表数据
+          this.$axios.get('/obtain/kinds_data_count$ajax.htm', {
+            params:{
+              area:'青羊区'
+            }
+          })
+            .then((res) => {
+              var _this = this
+              res.data.resultList.map(function (item,index) {
+                _this.kindCharts.push(item.kind)
+                _this.countCharts.push({name:item.kind,value:item.count})
+                _this.marcounts.push({name:item.kind,value:_this.numFilter(item.pass_rate*100)+'%'})
+                _this.resultcounts.push({name:item.kind,value:_this.numFilter(item.pass_rate*100)})
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+        },
+        change(index){
+          this.$axios.get('/Yearcouservlet$ajax.htm', {
+            params:{
+              date:this.titles[index].value,
+              area:'青羊区'
+            }
+          })
+            .then((res) => {
+              this.titles[index].countdata=res.data.marcount
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+          this.$axios.get('/Countservlet$ajax.htm', {
+            params:{
+              date:this.titles[index].value,
+              area:'青羊区'
+            }
+          })
+            .then((res) => {
+              this.titles[index].detection=res.data.marcount
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+          this.$axios.get('/Resultservlet$ajax.htm', {
+            params:{
+              date:this.titles[index].value,
+              area:'青羊区'
+            }
+          })
+            .then((res) => {
+              this.titles[index].result=res.data.data*100
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+        },
+        computeddate(){
+          this.titles[0].value=this.$moment().format('YYYY')
+          this.titles[1].value=this.$moment().format('YYYY-MM')
+          this.titles[2].value=this.$moment().format('YYYY-MM-DD')
+        },
+        numFilter (value) {
+          // 截取当前数据到小数点后两位
+          let tempVal = parseFloat(value).toFixed(2)
+          let realVal = tempVal.substring(0, tempVal.length - 1)
+          return realVal
+        }
+      },
+      filters: {
+        numFilter (value) {
+          // 截取当前数据到小数点后两位
+          let tempVal = parseFloat(value).toFixed(2)
+          let realVal = tempVal.substring(0, tempVal.length - 1)
+          return realVal
+        }
+      },
+      created(){
+        //年月日分别从后台取市场总数
+        this.computeddate()
+        this.marketcount()
+
+
+      }
+    }
+</script>
+
+<style scoped>
+  #main{
+    width: 100%;
+    height: 100%;
+  }
+  .flh-style-a{
+    background-color: #FFFFFF;
+    min-height: 200px;
+    padding: 0 20px ;
+  }
+  .flh-style-b{
+    background-color: #FFFFFF;
+    min-height: 400px;
+  }
+  .flh-data-style{
+    width: 160px;
+    float: right;
+  }
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-row:last-child {
+     margin-bottom: 0;
+   }
+
+</style>
