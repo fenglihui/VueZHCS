@@ -8,4 +8,11 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+.flh .el-table th{
+  text-align: center;
+}
+.flh .el-table td{
+  text-align: center;
+}
+
 

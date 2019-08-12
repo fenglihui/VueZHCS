@@ -63,10 +63,39 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <div class="flh-style-b"></div>
+          <div class="flh-style-b">
+            <el-row>
+              <el-col :span="24" style="padding-top: 20px">
+                <Titlename>
+                  检测出不合格产品
+                </Titlename>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <Disqualifitable
+                :thTitle="thTitle"
+                :tdData="tdData"></Disqualifitable>
+              </el-col>
+            </el-row>
+          </div>
         </el-col>
         <el-col :span="12">
-          <div class="flh-style-b"></div>
+          <div class="flh-style-b">
+            <el-row>
+              <el-col :span="12" style="padding-top: 20px">
+                <Titlename>
+                  今日快检数据
+                </Titlename>
+              </el-col>
+              <el-col :span="12">
+
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24"></el-col>
+            </el-row>
+          </div>
         </el-col>
       </el-row>
   </div>
@@ -79,9 +108,10 @@
     import Kinddata from "@/components/page/HomePgson/Kinddata";
     import Titlename from "@/components/page/HomePgson/Titlename";
     import Shadowcharts from  '@/components/page/HomePgson/Shadowcharts'
+    import Disqualifitable from "@/components/page/HomePgson/Disqualifitable";
     export default {
       name: "homepage",
-      components: {Titlename, Kinddata, Piecharts, Totaldata,Shadowcharts},
+      components: {Disqualifitable, Titlename, Kinddata, Piecharts, Totaldata,Shadowcharts},
       data(){
         return{
           titles:[
@@ -95,7 +125,20 @@
           kindCharts:[],
           countCharts:[],
           marcounts:[],
-          resultcounts:[]
+          resultcounts:[],
+          thTitle:[
+            {label:'样品编号',data:'id'},
+            {label:'经营户',data:'manage'},
+            {label:'样品名称',data:'sampname'},
+            {label:'进货渠道',data:'channels'},
+            {label:'所属市场',data:'testaddr'},
+            {label:'检测项目',data:'testitem'},
+            {label:'检测指标',data:'testidx'},
+            {label:'检测结论',data:'result'},
+            {label:'检测时间',data:'testtm'},
+            {label:'处理结果',data:'precess'}
+          ],
+          tdData:[]
         }
       },
       methods:{
@@ -153,6 +196,46 @@
                 _this.marcounts.push({name:item.kind,value:_this.numFilter(item.pass_rate*100)+'%'})
                 _this.resultcounts.push({name:item.kind,value:_this.numFilter(item.pass_rate*100)})
               })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+          this.$axios.get('/DataFservlet$ajax.htm')
+            .then((res) => {
+              var _this = this
+              console.log(res)
+              res.data.resultList.map(function (item,index) {
+                if(item.testidx==-1){
+                  item.testidx="阴性";
+                }
+                else if (item.testidx==-2){
+                  item.testidx="阳性";
+                }
+                else if(item.testidx!=-1&&item.testidx!=-2){
+                  if(item.testitem=='二氧化硫'||item.testitem=='吊白块'||item.testitem=='甲醛'||item.testitem=='亚硝酸盐'){
+                    item.testidx=item.testidx+"mg/kg";
+                  }
+                  else if(item.testitem=='农药残留'){
+                    item.testidx=item.testidx+"%";
+                  }
+                }
+                if(item.result=="合格") {
+                  if (item.precess == null) {
+                    item.precess = "";
+                  }
+                }
+                else {
+                  if (item.precess=="已下架"||item.precess=="已处理"){
+
+                  }
+                  else{
+                    item.precess = "待处理";
+                  }
+                }
+                _this.tdData.push({id:index+1,manage:item.manage,sampname:item.sampname,channels:item.channels,
+                  testaddr:item.testaddr,testitem:item.testitem,testidx:item.testidx,result:item.result,testtm:_this.$moment(item.testtm).format('YYYY-MM-DD'),precess:item.precess})
+              })
+
             })
             .catch((error) => {
               console.log(error);
@@ -239,6 +322,7 @@
   .flh-style-b{
     background-color: #FFFFFF;
     min-height: 400px;
+    padding: 0 20px ;
   }
   .flh-data-style{
     width: 160px;
