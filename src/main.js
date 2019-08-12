@@ -7,8 +7,9 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import moment from 'moment'
+import '@/assets/theme/wonderland.js'
 import echarts from 'echarts'
-import 'echarts/theme/wonderland.js'
+
 //引入全局css样式
 import './assets/css/App.css'
 
