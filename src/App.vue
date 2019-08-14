@@ -19,6 +19,8 @@ body{
 #app {
   position: relative;
 }
-
+body .el-table th.gutter{
+  display: table-cell!important;
+}
 
 </style>

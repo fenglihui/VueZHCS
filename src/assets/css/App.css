@@ -1,6 +1,9 @@
 .flh .el-input__inner{
   padding-left: 35px;
 }
+.select .el-input__inner {
+  padding-left: 25px;
+}
 .flh .el-input__prefix{
   left: 10px;
 }
@@ -10,9 +13,14 @@
 }
 .flh .el-table th{
   text-align: center;
+  display: table-cell!important;
 }
 .flh .el-table td{
   text-align: center;
+  font-size: 12px;
+}
+.flh .el-table__header{
+  width: 0;
 }
 
 

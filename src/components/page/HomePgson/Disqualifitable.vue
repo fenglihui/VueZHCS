@@ -1,13 +1,11 @@
 <template>
-  <div class="table-style">
-    <el-scrollbar style="height: 320px;padding-right: 17px">
     <el-table
       :data="tableData"
-      style="width: 100%"
-      class="flh"
       border
-      height="320"
-      :class="{active:isactive}">
+      max-height="320"
+      :cell-style="isActive"
+      class="flh"
+      style="width: 100%">
 
       <template v-for="(table,index) in thTables">
         <el-table-column
@@ -20,8 +18,6 @@
       </template>
 
     </el-table>
-    </el-scrollbar>
-  </div>
 </template>
 
 <script>
@@ -31,22 +27,44 @@
       data(){
         return{
           thTables:[],
-          tableData:[],
-          isactive:false
+          tableData:[]
         }
       },
       watch:{
         thTitle:function (newvalue,oldvalue) {
-          this.thTables=newvalue
+          if (newvalue!==oldvalue){
+            this.thTables=newvalue
+          }
         },
         tdData:function (newvalue,oldvalue) {
-          this.tableData=newvalue
+          if (newvalue!==oldvalue){
+            this.tableData=newvalue
+          }
+        }
+      },
+      methods:{
+        isActive:function ({row,column,rowIndex,columnIndex}) {
+          if (row.result=='不合格'&&columnIndex==7){
+            return 'color:#e1312c'
+          }
+          if (row.precess=='待处理'&&columnIndex==9){
+            return  'color:#ff9c14'
+          }
+          if (row.result=='合格'&&columnIndex==7){
+            return 'color:#2fbb50'
+          }
+          if (row.precess=='已处理'&&columnIndex==9){
+            return 'color:#2fbb50'
+          }
         }
       },
       created() {
         this.thTables=this.thTitle;
         this.tableData=this.tdData;
-      }
+      },
+      mounted() {
+      },
+      
     }
 </script>
 
@@ -54,11 +72,5 @@
   .table-style{
     width: 100%;
     height: 100%;
-  }
-  .el-table td{
-    text-align: center;
-  }
-  .active{
-    color: red;
   }
 </style>

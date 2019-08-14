@@ -88,12 +88,19 @@
                   今日快检数据
                 </Titlename>
               </el-col>
-              <el-col :span="12">
-
+              <el-col :span="12" style="padding-top: 12px;">
+                <SelectMarket :selectData="selectData" style="float: right;width: 180px;" class="select" @selectValue="getSonValue"></SelectMarket>
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="24"></el-col>
+              <el-col :span="24">
+                <Disqualifitable
+                :thTitle="todayThTitle"
+                :tdData="todayData"
+                >
+
+                </Disqualifitable>
+              </el-col>
             </el-row>
           </div>
         </el-col>
@@ -109,9 +116,10 @@
     import Titlename from "@/components/page/HomePgson/Titlename";
     import Shadowcharts from  '@/components/page/HomePgson/Shadowcharts'
     import Disqualifitable from "@/components/page/HomePgson/Disqualifitable";
+    import SelectMarket from "@/components/page/HomePgson/SelectMarket";
     export default {
       name: "homepage",
-      components: {Disqualifitable, Titlename, Kinddata, Piecharts, Totaldata,Shadowcharts},
+      components: {SelectMarket, Disqualifitable, Titlename, Kinddata, Piecharts, Totaldata,Shadowcharts},
       data(){
         return{
           titles:[
@@ -138,10 +146,118 @@
             {label:'检测时间',data:'testtm'},
             {label:'处理结果',data:'precess'}
           ],
-          tdData:[]
+          todayThTitle:[
+            {label:'样品编号',data:'id'},
+            {label:'经营户',data:'manage'},
+            {label:'样品名称',data:'sampname'},
+            {label:'产地',data:'location'},
+            {label:'进货渠道',data:'channels'},
+            {label:'检测项目',data:'testitem'},
+            {label:'检测指标',data:'testidx'},
+            {label:'检测结论',data:'result'},
+            {label:'检测时间',data:'testtm'},
+            {label:'处理结果',data:'precess'}
+          ],
+          tdData:[],
+          todayData:[],
+          selectData:[
+            {value:'益民菜市(长顺街店)',label:'益民菜市(长顺街店)'},
+            {value:'益民菜市(北东街店)',label:'益民菜市(北东街店)'},
+            {value:'福美优鲜(科联路店)',label:'福美优鲜(科联路店)'},
+            {value:'益民菜市(家园店)',label:'益民菜市(家园店)'},
+            {value:'欢腾农贸市场',label:'欢腾农贸市场'},
+            {value:'金沙农贸市场',label:'金沙农贸市场'},
+            {value:'民生菜市(牧电路店)',label:'民生菜市(牧电路店)'},
+            {value:'民生菜市(牧电巷店)',label:'民生菜市(牧电巷店)'},
+            {value:'培风农贸市场',label:'培风农贸市场'},
+            {value:'石人农贸市场',label:'石人农贸市场'},
+            {value:'苏坡农贸市场',label:'苏坡农贸市场'},
+            {value:'汪家拐农贸市场',label:'汪家拐农贸市场'},
+            {value:'文家综合农贸市场',label:'文家综合农贸市场'},
+            {value:'优品汇民市场',label:'优品汇民市场'},
+            {value:'益民菜市(中铁西城店)',label:'益民菜市(中铁西城店)'},
+            {value:'双顺农贸市场',label:'双顺农贸市场'},
+            {value:'三合农贸市场',label:'三合农贸市场'},
+            {value:'东坡现代农贸市场',label:'东坡现代农贸市场'},
+            {value:'贝森农贸市场',label:'贝森农贸市场'},
+            {value:'益民菜市(锦西店)',label:'益民菜市(锦西店)'},
+            {value:'清溪菜市',label:'清溪菜市'},
+            {value:'群康菜市',label:'群康菜市'},
+            {value:'水木光华农贸市场',label:'水木光华农贸市场'},
+            {value:'成航农贸市场',label:'成航农贸市场'},
+            {value:'龙嘴农贸市场',label:'龙嘴农贸市场'},
+            {value:'百仁润禾农贸市场',label:'百仁润禾农贸市场'},
+            {value:'益民菜市(清波店)',label:'益民菜市(清波店)'},
+            {value:'益民菜市(清源店)',label:'益民菜市(清源店)'},
+            {value:'益民菜市(万家湾店)',label:'益民菜市(万家湾店)'},
+            {value:'联合一百生活广场',label:'联合一百生活广场'},
+            {value:'益民菜市(英国小镇店)',label:'益民菜市(英国小镇店)'},
+            {value:'幸福里农贸市场',label:'幸福里农贸市场'},
+            {value:'益民菜市(浣花溪店)',label:'益民菜市(浣花溪店)'},
+            {value:'益民菜市(小关庙店)',label:'益民菜市(小关庙店)'},
+          ],
+          selectValue:'',
+          todayDate:''
+        }
+      },
+      watch:{
+        selectValue:function (newvalue,oldvalue) {
+          if (newvalue!==oldvalue){
+            this.$axios.get('/Dataservlet$ajax.htm', {
+              params:{
+                date:this.todayDate,
+                market:newvalue,
+                pageSize:300
+              }
+            })
+              .then((res) => {
+                var _this = this
+                if (res.data.resultList.length<1){
+                  _this.todayData=[];
+                }
+                else{
+                  res.data.resultList.map(function (item,index) {
+                    if(item.testidx==-1){
+                      item.testidx="阴性";
+                    }
+                    else if (item.testidx==-2){
+                      item.testidx="阳性";
+                    }
+                    else if(item.testidx!=-1&&item.testidx!=-2){
+                      if(item.testitem=='二氧化硫'||item.testitem=='吊白块'||item.testitem=='甲醛'||item.testitem=='亚硝酸盐'){
+                        item.testidx=item.testidx+"mg/kg";
+                      }
+                      else if(item.testitem=='农药残留'){
+                        item.testidx=item.testidx+"%";
+                      }
+                    }
+                    if(item.result=="合格") {
+                      if (item.precess == null) {
+                        item.precess = "";
+                      }
+                    }
+                    else {
+                      if (item.precess=="已下架"||item.precess=="已处理"){
+
+                      }
+                      else{
+                        item.precess = "待处理";
+                      }
+                    }
+                    _this.todayData.push({id:index+1,manage:item.manage,sampname:item.sampname,location:item.location,channels:item.channels,testitem:item.testitem,testidx:item.testidx,result:item.result,testtm:_this.$moment(item.testtm).format('YYYY-MM-DD'),precess:item.precess})
+                  })
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          }
         }
       },
       methods:{
+        getTodayDate(){
+          this.todayDate=this.$moment().format('YYYY-MM-DD');
+        },
         marketcount(){
           //循环加载市场总数、数据总数、合格率
           for (let i=0;i<this.titles.length;i++) {
@@ -203,7 +319,6 @@
           this.$axios.get('/DataFservlet$ajax.htm')
             .then((res) => {
               var _this = this
-              console.log(res)
               res.data.resultList.map(function (item,index) {
                 if(item.testidx==-1){
                   item.testidx="阴性";
@@ -289,6 +404,10 @@
           let tempVal = parseFloat(value).toFixed(2)
           let realVal = tempVal.substring(0, tempVal.length - 1)
           return realVal
+        },
+        getSonValue(data){
+          this.selectValue=data
+          console.log('selectValue',this.selectValue)
         }
       },
       filters: {
@@ -301,6 +420,7 @@
       },
       created(){
         //年月日分别从后台取市场总数
+        this.getTodayDate()
         this.computeddate()
         this.marketcount()
 

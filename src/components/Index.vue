@@ -45,7 +45,6 @@
       methods:{
         hh(){
           this.size=document.documentElement.clientHeight  +'px';
-          console.log(this.size)
         }
       }
     }
