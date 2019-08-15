@@ -1,5 +1,6 @@
 <template>
     <el-table
+      v-loading="this.loading"
       :data="tableData"
       border
       max-height="320"
@@ -23,7 +24,7 @@
 <script>
     export default {
       name: "Disqualifitable",
-      props:['thTitle','tdData'],
+      props:['thTitle','tdData','loading'],
       data(){
         return{
           thTables:[],

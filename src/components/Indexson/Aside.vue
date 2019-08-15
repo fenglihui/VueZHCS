@@ -15,13 +15,30 @@
       <i class="el-icon-s-home flh-icon-style"></i>
       <span slot="title">首页</span>
     </el-menu-item>
-    <el-submenu index="">
+    <el-submenu index="数据汇总">
       <template slot="title">
         <i class="el-icon-s-marketing flh-icon-style"></i>
         <span slot="title">数据汇总</span>
       </template>
-        <el-menu-item index="/searchpage1" style="text-align: center">分类统计</el-menu-item>
-        <el-menu-item index="/searchpage2" style="text-align: center">历史查询</el-menu-item>
+        <el-menu-item index="/searchpage1" style="text-align: center" v-if="isDisplay">分类统计</el-menu-item>
+        <el-menu-item index="/searchpage2" style="text-align: center" >历史查询</el-menu-item>
+    </el-submenu>
+    <el-submenu index="数据处理" v-if="isAdmin">
+      <template slot="title">
+        <i class="el-icon-s-grid flh-icon-style"></i>
+        <span slot="title">数据处理</span>
+      </template>
+      <el-menu-item index="/searchpage1" style="text-align: center">不合格数据查询</el-menu-item>
+      <el-menu-item index="/searchpage2" style="text-align: center">不合格数据处理</el-menu-item>
+    </el-submenu>
+    <el-submenu index="员工功能" v-if="isPersion">
+      <template slot="title">
+        <i class="el-icon-s-custom flh-icon-style"></i>
+        <span slot="title">员工功能</span>
+      </template>
+      <el-menu-item index="/searchpage1" style="text-align: center">当日数据统计</el-menu-item>
+      <el-menu-item index="/searchpage2" style="text-align: center">快检数据录入</el-menu-item>
+      <el-menu-item index="/searchpage2" style="text-align: center">快检数据上传</el-menu-item>
     </el-submenu>
     <el-menu-item index="/searchpage3">
       <i class="el-icon-s-data flh-icon-style"></i>
@@ -29,7 +46,7 @@
     </el-menu-item>
     <el-menu-item index="/mappage">
       <i class="el-icon-location flh-icon-style"></i>
-      <span slot="title">地图定位</span>
+      <span slot="title">市场定位</span>
     </el-menu-item>
   </el-menu>
 </template>
@@ -45,7 +62,10 @@
             icon:true,
             open:'el-icon-s-unfold',
             close:'el-icon-s-fold',
-            active:'flh-icon-style'
+            active:'flh-icon-style',
+            isAdmin:false,
+            isPersion:false,
+            isDisplay:true
           };
       },
       methods: {
@@ -62,6 +82,23 @@
           }
 
         }
+      },
+      created() {
+          if (this.$store.state.authority==1){
+            this.isAdmin=true
+            this.isPersion=true
+
+          }
+          else if (this.$store.state.authority==2) {
+            this.isPersion=true
+          }
+          else if (this.$store.state.authority==3){
+            this.isAdmin=true
+          }
+          else{
+            this.isDisplay=false
+          }
+
       }
 
     }

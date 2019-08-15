@@ -2,13 +2,13 @@
     <div id="Header-container" class="head-style">
       <img src="../../assets/loginlogo.png" class="logo">
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="icon-style"></el-avatar>
-      <p class="username">游客</p>
+      <p class="username">{{this.$store.state.nickname}}</p>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Header"
+      name: "Header"
     }
 </script>
 

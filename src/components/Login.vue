@@ -18,7 +18,7 @@
           </el-form-item >
           <el-button type="primary" class="click" @click="login('ruleForm')">登录</el-button>
           <div class="register">
-            <router-link :to="{ name:'Index'}">游客登录</router-link>
+            <router-link :to="{ name:'Index'}" @click.native="replace">游客登录</router-link>
           </div>
         </el-form>
       </div>
@@ -66,6 +66,9 @@
           }
         },
       methods:{
+        replace:function(){
+          this.$store.commit('replace',{nickname:'游客',area:'青羊区',authority:4})
+        },
         login:function (formdata) {
           this.$refs[formdata].validate((valid)=>{
             if (valid) {
@@ -91,6 +94,7 @@
                 .then((res) => {
                   if (res.data.msg == '成功') {
                     this.$router.push({name: 'Index'});
+                    this.$store.commit('replace',{nickname:res.data.resultList[0].nickname,area:res.data.resultList[0].area,authority:res.data.resultList[0].authority})
                   } else {
                     //alert('用户名或密码错误')
 

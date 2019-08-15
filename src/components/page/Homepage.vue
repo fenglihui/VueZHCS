@@ -89,7 +89,7 @@
                 </Titlename>
               </el-col>
               <el-col :span="12" style="padding-top: 12px;">
-                <SelectMarket :selectData="selectData" style="float: right;width: 180px;" class="select" @selectValue="getSonValue"></SelectMarket>
+                <SelectMarket :selectData="selectData" style="float: right;width: 180px;" @selectValue="getSonValue"></SelectMarket>
               </el-col>
             </el-row>
             <el-row>
@@ -407,7 +407,6 @@
         },
         getSonValue(data){
           this.selectValue=data
-          console.log('selectValue',this.selectValue)
         }
       },
       filters: {
@@ -423,7 +422,6 @@
         this.getTodayDate()
         this.computeddate()
         this.marketcount()
-
 
       }
     }
