@@ -40,16 +40,23 @@
       },
       components: {Header, Aside},
       created() {
-        this.hh()
         if (this.$store.state.nickname==''||this.$store.state.nickname==null) {
           this.$router.push({name:'Login'})
         }
       },
+      mounted(){
+        this.hh()
+      },
       methods:{
-        hh(){
-          this.size=document.documentElement.clientHeight  +'px';
+        hh() {
+          this.size = document.documentElement.clientHeight + 'px';
+          window.onresize = () => {
+            return (() => {
+              this.size = document.documentElement.clientHeight + 'px';
+            })();
+          }
         }
-      }
+      },
     }
 </script>
 

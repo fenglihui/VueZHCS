@@ -1,0 +1,95 @@
+<template>
+    <div id="searchChartsF"></div>
+</template>
+
+<script>
+    export default {
+      name: "NormalCharts",
+      props:['resultcounts','rowValue'],
+      data(){
+        return{
+          kind:[],
+          count:[],
+          chartsX:this.rowValue
+        }
+      },
+      watch:{
+        resultcounts:function (newvalue,oldvalue) {
+          this.count=newvalue;
+          this.drawCharts();
+        },
+        rowValue:function (newvalue,oldvalue) {
+          this.chartsX=newvalue;
+          this.drawCharts();
+        }
+      },
+      mounted() {
+        this.drawCharts()
+      },
+      methods:{
+        drawCharts(){
+          let myRcharts = this.$echarts.init(document.getElementById('searchChartsF'));
+          let option = {
+            tooltip : {
+
+            },
+            legend: {
+              textStyle:{
+                color:'#a3a3a3'
+              },
+              data:['批次数']
+            },
+            grid:{
+              show:true,
+              borderColor: '#cecece'
+            },
+            xAxis : [
+              {
+                data :this.chartsX,
+                axisLine:{
+                  lineStyle:{
+                    color:'#cecece'
+                  }
+                }
+              }
+            ],
+            yAxis : [
+              {
+                type : 'value',
+                axisLine:{
+                  lineStyle:{
+                    color:'#cecece'
+                  }
+                }
+              }
+            ],
+            series : [
+              {
+                name:'批次数',
+                type:'bar',
+                data:this.count,
+                itemStyle:{
+                  normal:{
+                    color:'#24ad83'
+                  }
+                }
+              }
+            ],
+            textStyle:{
+              color:'#a3a3a3'
+            }
+          };
+          myRcharts.setOption(option, true);
+        },
+
+      }
+    }
+</script>
+
+<style scoped>
+  #searchChartsF{
+    width: 100%;
+    height: 340px;
+  }
+</style>
+

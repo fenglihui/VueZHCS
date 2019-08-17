@@ -75,7 +75,9 @@
               <el-col :span="24">
                 <Disqualifitable
                 :thTitle="thTitle"
-                :tdData="tdData"></Disqualifitable>
+                :tdData="tdData"
+                :isActive="isActive"
+                :height-size="320"></Disqualifitable>
               </el-col>
             </el-row>
           </div>
@@ -97,6 +99,8 @@
                 <Disqualifitable
                 :thTitle="todayThTitle"
                 :tdData="todayData"
+                :isActive="isActive"
+                :height-size="320"
                 >
 
                 </Disqualifitable>
@@ -177,10 +181,7 @@
             })
               .then((res) => {
                 var _this = this
-                if (res.data.resultList.length<1){
-                  _this.todayData=[];
-                }
-                else{
+                this.todayData=[];
                   res.data.resultList.map(function (item,index) {
                     if(item.testidx==-1){
                       item.testidx="阴性";
@@ -211,7 +212,6 @@
                     }
                     _this.todayData.push({id:index+1,manage:item.manage,sampname:item.sampname,location:item.location,channels:item.channels,testitem:item.testitem,testidx:item.testidx,result:item.result,testtm:_this.$moment(item.testtm).format('YYYY-MM-DD'),precess:item.precess})
                   })
-                }
               })
               .catch((error) => {
                 console.log(error);
@@ -220,6 +220,20 @@
         }
       },
       methods:{
+        isActive:function ({row,column,rowIndex,columnIndex}) {
+          if (row.result=='不合格'&&columnIndex==7){
+            return 'color:#e1312c'
+          }
+          if (row.precess=='待处理'&&columnIndex==9){
+            return  'color:#ff9c14'
+          }
+          if (row.result=='合格'&&columnIndex==7){
+            return 'color:#2fbb50'
+          }
+          if (row.precess=='已处理'&&columnIndex==9){
+            return 'color:#2fbb50'
+          }
+        },
         getTodayDate(){
           this.todayDate=this.$moment().format('YYYY-MM-DD');
         },
@@ -284,6 +298,7 @@
           this.$axios.get('/DataFservlet$ajax.htm')
             .then((res) => {
               var _this = this
+              this.tdData=[]
               res.data.resultList.map(function (item,index) {
                 if(item.testidx==-1){
                   item.testidx="阴性";

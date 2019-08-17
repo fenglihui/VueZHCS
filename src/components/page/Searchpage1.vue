@@ -29,6 +29,7 @@
                     :thTitle="todayThTitle"
                     :tdData="search.data"
                     :loading="search.loading"
+                    :height-size="320"
                   >
 
                   </Disqualifitable>
@@ -65,6 +66,7 @@
                     :thTitle="kindsThTitle"
                     :tdData="kind.data"
                     :loading="kind.loading"
+                    :height-size="320"
                   >
                   </Disqualifitable>
                 </el-col>

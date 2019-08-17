@@ -28,19 +28,19 @@
         <i class="el-icon-s-grid flh-icon-style"></i>
         <span slot="title">数据处理</span>
       </template>
-      <el-menu-item index="/searchpage1" style="text-align: center">不合格数据查询</el-menu-item>
-      <el-menu-item index="/searchpage2" style="text-align: center">不合格数据处理</el-menu-item>
+      <el-menu-item index="/searchpage3" style="text-align: center">不合格数据查询</el-menu-item>
+      <el-menu-item index="/operTable" style="text-align: center">不合格数据处理</el-menu-item>
     </el-submenu>
     <el-submenu index="员工功能" v-if="isPersion">
       <template slot="title">
         <i class="el-icon-s-custom flh-icon-style"></i>
         <span slot="title">员工功能</span>
       </template>
-      <el-menu-item index="/searchpage1" style="text-align: center">当日数据统计</el-menu-item>
-      <el-menu-item index="/searchpage2" style="text-align: center">快检数据录入</el-menu-item>
-      <el-menu-item index="/searchpage2" style="text-align: center">快检数据上传</el-menu-item>
+      <el-menu-item index="/todayData" style="text-align: center">当日数据统计</el-menu-item>
+      <el-menu-item index="/inputData" style="text-align: center">快检数据录入</el-menu-item>
+      <el-menu-item index="" style="text-align: center">快检数据上传</el-menu-item>
     </el-submenu>
-    <el-menu-item index="/searchpage3">
+    <el-menu-item index="/PriceData">
       <i class="el-icon-s-data flh-icon-style"></i>
       <span slot="title">菜价统计</span>
     </el-menu-item>

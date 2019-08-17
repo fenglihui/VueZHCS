@@ -43,6 +43,26 @@ const router = new Router({
           path:'/searchpage3',
           name:'Searchpage3',
           component:resolve => require(['../components/page/Searchpage3.vue'],resolve)
+        },
+        {
+          path:'/operTable',
+          name:'OperTable',
+          component:resolve => require(['../components/page/operTable.vue'],resolve)
+        },
+        {
+          path:'/todayData',
+          name:'TodayTable',
+          component:resolve => require(['../components/page/TodayData.vue'],resolve)
+        },
+        {
+          path:'/priceData',
+          name:'PriceData',
+          component:resolve => require(['../components/page/PriceData.vue'],resolve)
+        },
+        {
+          path:'/inputData',
+          name:'InputData',
+          component:resolve => require(['../components/page/InputData.vue'],resolve)
         }
       ]
     }
@@ -50,10 +70,4 @@ const router = new Router({
   mode:"history"
 })
 export default router
-/*router.beforeEach((to, from, next) => {
-  if (to.path === '/login'){
-    next();
-  }else{
 
-  }
-})*/

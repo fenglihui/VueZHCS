@@ -180,6 +180,9 @@
   .f-icon-size{
     font-size: 18px;
   }
+  .flh /deep/ .el-input__inner{
+    padding-left: 35px;
+  }
 
 </style>
 
