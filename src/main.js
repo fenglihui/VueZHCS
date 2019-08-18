@@ -17,6 +17,7 @@ import './assets/css/App.css'
 
 Vue.use(ElementUI);
 
+
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios

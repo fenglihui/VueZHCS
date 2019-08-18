@@ -19,5 +19,39 @@
 .flh .el-table__header{
   width: 0;
 }
+#myList li:hover{
+  cursor: pointer;
+  background: rgba(241, 241, 241, 0.45);
+}
+#myList li:hover p {
+  color: #333333;
+}
+.address2,.my-btn2{
+  color: #656565;
+}
+.li-hover{
+  margin-top: 0;
+  display: block;
+  padding-top: 5px;
+}
+.li-hover:hover{
+  background: rgba(0, 0, 0, 0.03)
+}
+.my-btn1{
+  font-weight: bold;
+  font-size: 14px;
+  height: 10px;
+  line-height: 10px;
+}
+.address1 {
+  font-size: 13px;
+  height: 15px;
+}
+.bottom-link{
+  margin-top: 15px;
+  width: 100%;
+  height: 1px;
+  background: rgba(171, 171, 171, 0.18);
+}
 
 
