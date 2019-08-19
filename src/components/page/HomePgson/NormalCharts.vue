@@ -10,7 +10,8 @@
         return{
           kind:[],
           count:[],
-          chartsX:this.rowValue
+          chartsX:this.rowValue,
+          myRcharts:null
         }
       },
       watch:{
@@ -21,6 +22,16 @@
         rowValue:function (newvalue,oldvalue) {
           this.chartsX=newvalue;
           this.drawCharts();
+        },
+        getStoreItem(newval,oldval){
+          if (newval!==oldval){
+            this.myRcharts.resize();
+          }
+        }
+      },
+      computed:{
+        getStoreItem(){
+          return this.$store.state.windowSize
         }
       },
       mounted() {
@@ -28,7 +39,7 @@
       },
       methods:{
         drawCharts(){
-          let myRcharts = this.$echarts.init(document.getElementById('searchChartsF'));
+          this.myRcharts = this.$echarts.init(document.getElementById('searchChartsF'));
           let option = {
             tooltip : {
 
@@ -79,7 +90,7 @@
               color:'#a3a3a3'
             }
           };
-          myRcharts.setOption(option, true);
+          this.myRcharts.setOption(option, true);
         },
 
       }

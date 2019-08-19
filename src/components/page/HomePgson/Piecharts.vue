@@ -9,7 +9,8 @@
       data(){
         return{
           kind:[],
-          count:[]
+          count:[],
+          myCcharts:null
         }
       },
       watch:{
@@ -20,14 +21,24 @@
         kindCharts:function (newvalue,oldvalue) {
           this.kind=newvalue;
           this.drawCharts();
+        },
+        getStoreItem(newval,oldval){
+          if (newval!==oldval){
+            this.myCcharts.resize();
+          }
         }
       },
       mounted() {
         this.drawCharts()
       },
+      computed:{
+        getStoreItem(){
+          return this.$store.state.windowSize
+        }
+      },
       methods:{
         drawCharts(){
-          let myCcharts = this.$echarts.init(document.getElementById('myCcharts'),'wonderland');
+          this.myCcharts = this.$echarts.init(document.getElementById('myCcharts'),'wonderland');
           let option = {
             tooltip: {
               trigger: 'item',
@@ -67,7 +78,7 @@
               }
             ]
           }
-          myCcharts.setOption(option,true)
+          this.myCcharts.setOption(option,true)
         },
 
       }

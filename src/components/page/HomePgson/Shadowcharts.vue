@@ -9,13 +9,24 @@
     data(){
       return{
         kind:[],
-        count:[]
+        count:[],
+        myRcharts:null
       }
     },
     watch:{
       resultcounts:function (newvalue,oldvalue) {
         this.count=newvalue;
         this.drawCharts();
+      },
+      getStoreItem(newval,oldval){
+        if (newval!==oldval){
+          this.myRcharts.resize();
+        }
+      }
+    },
+    computed:{
+      getStoreItem(){
+        return this.$store.state.windowSize
       }
     },
     mounted() {
@@ -23,7 +34,7 @@
     },
     methods:{
       drawCharts(){
-        let myRcharts = this.$echarts.init(document.getElementById('myRcharts'),'wonderland');
+        this.myRcharts = this.$echarts.init(document.getElementById('myRcharts'),'wonderland');
         let option = {
           tooltip : {
             trigger: 'axis',
@@ -81,7 +92,7 @@
             }
           ]
         };
-        myRcharts.setOption(option, true);
+        this.myRcharts.setOption(option, true);
       },
 
     }

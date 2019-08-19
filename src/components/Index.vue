@@ -51,6 +51,7 @@
         hh() {
           this.size = document.documentElement.clientHeight + 'px';
           window.onresize = () => {
+            this.$store.commit('replace',{windowSize:document.documentElement.clientWidth})
             return (() => {
               this.size = document.documentElement.clientHeight + 'px';
             })();

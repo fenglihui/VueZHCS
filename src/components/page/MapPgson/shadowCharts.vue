@@ -9,7 +9,8 @@
     data(){
       return{
         kind:this.kindCharts,
-        count:this.resultcounts
+        count:this.resultcounts,
+        myRcharts:null
       }
     },
     watch:{
@@ -20,6 +21,16 @@
       kindCharts:function (newvalue,oldvalue) {
         this.kind=newvalue
         this.drawCharts()
+      },
+      getStoreItem(newval,oldval){
+        if (newval!==oldval){
+          this.myRcharts.resize();
+        }
+      }
+    },
+    computed:{
+      getStoreItem(){
+        return this.$store.state.windowSize
       }
     },
     mounted() {
@@ -27,7 +38,7 @@
     },
     methods:{
       drawCharts(){
-        let myRcharts = this.$echarts.init(document.getElementById('myRcharts'),'wonderland');
+        this.myRcharts = this.$echarts.init(document.getElementById('myRcharts'),'wonderland');
         let option = {
           title:{
             show:true,
@@ -92,7 +103,7 @@
             }
           ]
         };
-        myRcharts.setOption(option, true);
+        this.myRcharts.setOption(option, true);
       },
 
     }

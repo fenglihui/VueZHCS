@@ -8,7 +8,8 @@ const store=new Vuex.Store({
   state:{
     nickname:'',
     area:'',
-    authority:''
+    authority:'',
+    windowSize:''
   },
   plugins:[createState({
     storage:window.sessionStorage
@@ -21,6 +22,7 @@ const store=new Vuex.Store({
       state.nickname=value.nickname
       state.area=value.area
       state.authority=value.authority
+      state.windowSize=value.windowSize
     }
   }
 })
